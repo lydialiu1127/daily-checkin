@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-title" content="每日打卡">
+  <meta name="theme-color" content="#F5F3FF">
+  <title>我的美好一天</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #6C63FF;
+      --primary-light: #8B85FF;
+      --success: #4CAF50;
+      --bg: #F5F3FF;
+      --card: #FFFFFF;
+      --text: #2D2B55;
+      --text-light: #8E8BA3;
+      --border: #E8E6F0;
+      --shadow: 0 4px 20px rgba(108, 99, 255, 0.1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* 顶部 */
+    .header {
+      text-align: center;
+      padding: 30px 0 20px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .header .date {
+      font-size: 15px;
+      color: var(--text-light);
+    }
+
+    /* 统计卡片 */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px 12px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* 进度条 */
+    .progress-wrap {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-header span {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .progress-header strong {
+      color: var(--primary);
+      font-size: 15px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* 打卡列表 */
+    .checklist {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 8px 0;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      user-select: none;
+    }
+
+    .check-item:last-child { border-bottom: none; }
+    .check-item:hover { background: #FAFAFE; }
+    .check-item:active { background: #F0EEFF; }
+
+    .check-item .checkbox {
+      width: 26px;
+      height: 26px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      margin-right: 14px;
+    }
+
+    .check-item.done .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .check-item .checkbox svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s;
+    }
+
+    .check-item.done .checkbox svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .check-item .icon {
+      font-size: 22px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .check-item .info {
+      flex: 1;
+    }
+
+    .check-item .info .title {
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .check-item .info .desc {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    .check-item .info .time {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .check-item.done .info .time {
+      color: var(--text-light);
+    }
+
+    .check-item.done .info .title {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    /* 完成动画 */
+    .check-item.done {
+      animation: checkPop 0.3s ease;
+    }
+
+    @keyframes checkPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    /* 全部完成 */
+    .all-done {
+      text-align: center;
+      padding: 30px 20px;
+      display: none;
+    }
+
+    .all-done.show { display: block; }
+
+    .all-done .emoji {
+      font-size: 60px;
+      animation: bounce 1s infinite;
+    }
+
+    .all-done .msg {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 10px;
+    }
+
+    .all-done .sub {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 6px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* 历史日历 */
+    .history-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .history-section h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .calendar-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .calendar-nav button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .calendar-nav button:hover { background: var(--bg); }
+
+    .calendar-nav .month-label {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .calendar-grid .weekday {
+      font-size: 11px;
+      color: var(--text-light);
+      padding: 4px 0;
+    }
+
+    .calendar-grid .day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border-radius: 50%;
+      color: var(--text-light);
+    }
+
+    .calendar-grid .day.checked {
+      background: var(--success);
+      color: white;
+      font-weight: 600;
+    }
+
+    .calendar-grid .day.partial {
+      background: #FFF3E0;
+      color: #FF9800;
+      font-weight: 600;
+    }
+
+    .calendar-grid .day.today {
+      border: 2px solid var(--primary);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .calendar-grid .day.empty { visibility: hidden; }
+
+    /* 自定义任务 */
+    .add-task {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .add-task input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .add-task input:focus { border-color: var(--primary); }
+
+    .add-task button {
+      padding: 12px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .add-task button:hover { background: var(--primary-light); }
+
+    /* 设置区域 */
+    .settings-toggle {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .settings-toggle button {
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .settings-toggle button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .settings-panel {
+      display: none;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .settings-panel.show { display: block; }
+
+    .settings-panel h3 {
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    .task-manage-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task-manage-item:last-child { border-bottom: none; }
+
+    .task-manage-item .task-name {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-manage-item .delete-btn {
+      background: none;
+      border: none;
+      color: #FF5252;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .task-manage-item .delete-btn:hover { background: #FFF0F0; }
+
+    .footer {
+      text-align: center;
+      padding: 20px 0 40px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>我的美好一天</h1>
+      <div class="date" id="todayDate"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="number" id="streakDays">0</div>
+        <div class="label">连续打卡</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="totalDays">0</div>
+        <div class="label">累计天数</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="completionRate">0%</div>
+        <div class="label">本月完成率</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span>今日进度</span>
+        <strong id="progressText">0 / 0</strong>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="checklist" id="checklist"></div>
+
+    <div class="all-done" id="allDone">
+      <div class="emoji">🎉</div>
+      <div class="msg">今日任务全部完成！</div>
+      <div class="sub">你太棒了，继续保持！</div>
+    </div>
+
+    <div class="add-task">
+      <input type="text" id="newTaskInput" placeholder="添加新的打卡项..." maxlength="20">
+      <button onclick="addCustomTask()">添加</button>
+    </div>
+
+    <div class="settings-toggle">
+      <button onclick="toggleSettings()">⚙️ 管理打卡项</button>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+      <h3>管理打卡项</h3>
+      <div id="taskManageList"></div>
+    </div>
+
+    <div class="history-section">
+      <h3>📅 打卡日历</h3>
+      <div class="calendar-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <span class="month-label" id="monthLabel"></span>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <div class="footer">数据保存在本地浏览器中</div>
+  </div>
+
+  <script>
+    // ===== 默认任务列表 =====
+    const DEFAULT_TASKS = [
+      { id: 't01', icon: '⏰', title: '起床', desc: '新的一天开始啦', time: '6:20' },
+      { id: 't02', icon: '💪', title: '鼓肚子 5 分钟', desc: '唤醒身体', time: '6:20–6:25' },
+      { id: 't03', icon: '🩸', title: '气血操 5 分钟', desc: '促进气血循环', time: '6:25–6:30' },
+      { id: 't04', icon: '🧘', title: '瑜伽 60 分钟', desc: '舒展身心，保持健康', time: '6:30–7:30' },
+      { id: 't05', icon: '🥋', title: '八段锦 15 分钟', desc: '传统养生功法', time: '7:30–7:45' },
+      { id: 't06', icon: '💄', title: '洗漱·化妆·穿搭', desc: '同时听播客', time: '7:45–8:20' },
+      { id: 't07', icon: '🚗', title: '上班 + 公司早餐', desc: '上班路上听帆书', time: '8:20–9:00' },
+      { id: 't08', icon: '📋', title: '列出今日重点工作', desc: '查看邮件，理清思路', time: '9:00–9:50' },
+      { id: 't09', icon: '🔥', title: '切换工作状态', desc: '进入专注模式', time: '9:50' },
+      { id: 't10', icon: '💻', title: '专注高效工作（上午）', desc: '心无旁骛，全力以赴', time: '10:00–12:00' },
+      { id: 't11', icon: '🌿', title: '午间自由安排', desc: '走路听书/美容院/午休冥想', time: '12:00–14:00' },
+      { id: 't12', icon: '💻', title: '专注高效工作（下午）', desc: '保持节奏，高效产出', time: '14:00–18:00' },
+      { id: 't13', icon: '🍽️', title: '下班·晚餐·饭后放松', desc: '饭后站立放松', time: '18:00–20:00' },
+      { id: 't14', icon: '📚', title: '学习一小时', desc: '理财/化妆/穿搭等', time: '20:00–21:00' },
+      { id: 't15', icon: '🦶', title: '泡脚', desc: '敷面膜/听古典音乐/看微博', time: '21:00–21:30' },
+      { id: 't16', icon: '📝', title: '总结日记·准备明日穿搭', desc: '回顾今天，规划明天', time: '21:30–22:00' },
+      { id: 't17', icon: '🌙', title: '睡前仪式', desc: '五动作·冥想·阅读', time: '22:00–23:00' },
+    ];
+
+    const STORAGE_KEY = 'daily_checkin_data';
+    const TASKS_KEY = 'daily_checkin_tasks';
+    const TASKS_VERSION = 'daily_checkin_tasks_v2';
+
+    let currentCalendarDate = new Date();
+
+    // ===== 工具函数 =====
+    function getToday() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      return `${year}年${month}月${day}日 星期${weekdays[date.getDay()]}`;
+    }
+
+    function getData() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch { return {}; }
+    }
+
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getTasks() {
+      try {
+        // 如果版本不匹配，重置为新的默认任务
+        if (localStorage.getItem(TASKS_VERSION) !== 'v2') {
+          localStorage.setItem(TASKS_VERSION, 'v2');
+          localStorage.removeItem(TASKS_KEY);
+          return DEFAULT_TASKS;
+        }
+        const saved = JSON.parse(localStorage.getItem(TASKS_KEY));
+        return saved && saved.length > 0 ? saved : DEFAULT_TASKS;
+      } catch { return DEFAULT_TASKS; }
+    }
+
+    function saveTasks(tasks) {
+      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+    }
+
+    // ===== 初始化 =====
+    function init() {
+      document.getElementById('todayDate').textContent = formatDate(new Date());
+      renderChecklist();
+      updateStats();
+      renderCalendar();
+    }
+
+    // ===== 渲染打卡列表 =====
+    function renderChecklist() {
+      const tasks = getTasks();
+      const data = getData();
+      const today = getToday();
+      const todayData = data[today] || {};
+
+      const container = document.getElementById('checklist');
+      container.innerHTML = tasks.map(task => {
+        const done = todayData[task.id] || false;
+        const timeHtml = task.time ? `<div class="time">${task.time}</div>` : '';
+        return `
+          <div class="check-item ${done ? 'done' : ''}" onclick="toggleTask('${task.id}')">
+            <div class="checkbox">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="icon">${task.icon}</div>
+            <div class="info">
+              ${timeHtml}
+              <div class="title">${task.title}</div>
+              <div class="desc">${task.desc}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 更新进度
+      const doneCount = tasks.filter(t => todayData[t.id]).length;
+      const total = tasks.length;
+      document.getElementById('progressText').textContent = `${doneCount} / ${total}`;
+      const pct = total > 0 ? (doneCount / total * 100) : 0;
+      document.getElementById('progressFill').style.width = pct + '%';
+
+      // 全部完成
+      document.getElementById('allDone').className = 'all-done' + (doneCount === total && total > 0 ? ' show' : '');
+    }
+
+    // ===== 切换打卡 =====
+    function toggleTask(taskId) {
+      const data = getData();
+      const today = getToday();
+      if (!data[today]) data[today] = {};
+      data[today][taskId] = !data[today][taskId];
+      saveData(data);
+      renderChecklist();
+      updateStats();
+      renderCalendar();
+    }
+
+    // ===== 更新统计 =====
+    function updateStats() {
+      const data = getData();
+      const tasks = getTasks();
+      const today = getToday();
+
+      // 计算累计完成天数（至少完成所有任务的天数）
+      let totalDays = 0;
+      let streak = 0;
+
+      // 获取所有日期并排序
+      const allDates = Object.keys(data).sort().reverse();
+
+      // 判断某天是否全部完成
+      function isDayComplete(dateStr) {
+        const dayData = data[dateStr];
+        if (!dayData) return false;
+        return tasks.every(t => dayData[t.id]);
+      }
+
+      // 累计天数
+      allDates.forEach(d => {
+        if (isDayComplete(d)) totalDays++;
+      });
+
+      // 连续天数（从今天或昨天开始往回数）
+      const d = new Date();
+      let checkDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+
+      // 如果今天还没全部完成，从昨天开始算
+      if (!isDayComplete(today)) {
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
+
+      while (true) {
+        const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+        if (isDayComplete(ds)) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+
+      // 本月完成率
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysPassed = now.getDate();
+      let completedThisMonth = 0;
+
+      for (let i = 1; i <= daysPassed; i++) {
+        const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        if (isDayComplete(ds)) completedThisMonth++;
+      }
+
+      const rate = daysPassed > 0 ? Math.round(completedThisMonth / daysPassed * 100) : 0;
+
+      document.getElementById('streakDays').textContent = streak;
+      document.getElementById('totalDays').textContent = totalDays;
+      document.getElementById('completionRate').textContent = rate + '%';
+    }
+
+    // ===== 日历 =====
+    function renderCalendar() {
+      const data = getData();
+      const tasks = getTasks();
+      const now = new Date();
+      const year = currentCalendarDate.getFullYear();
+      const month = currentCalendarDate.getMonth();
+
+      document.getElementById('monthLabel').textContent = `${year}年${month + 1}月`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayStr = getToday();
+
+      let html = '';
+      ['日', '一', '二', '三', '四', '五', '六'].forEach(w => {
+        html += `<div class="weekday">${w}</div>`;
+      });
+
+      // 空白天
+      for (let i = 0; i < firstDay; i++) {
+        html += '<div class="day empty"></div>';
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dayData = data[ds] || {};
+        const doneCount = tasks.filter(t => dayData[t.id]).length;
+        const total = tasks.length;
+
+        let cls = 'day';
+        if (ds === todayStr) cls += ' today';
+        if (total > 0 && doneCount === total) cls += ' checked';
+        else if (doneCount > 0) cls += ' partial';
+
+        html += `<div class="${cls}">${d}</div>`;
+      }
+
+      document.getElementById('calendarGrid').innerHTML = html;
+    }
+
+    function changeMonth(delta) {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    // ===== 添加自定义任务 =====
+    function addCustomTask() {
+      const input = document.getElementById('newTaskInput');
+      const title = input.value.trim();
+      if (!title) return;
+
+      const tasks = getTasks();
+      const id = 'custom_' + Date.now();
+      tasks.push({ id, icon: '⭐', title, desc: '自定义打卡项' });
+      saveTasks(tasks);
+      input.value = '';
+
+      renderChecklist();
+      updateStats();
+      renderTaskManageList();
+    }
+
+    // 回车添加
+    document.getElementById('newTaskInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') addCustomTask();
+    });
+
+    // ===== 管理任务 =====
+    function toggleSettings() {
+      const panel = document.getElementById('settingsPanel');
+      panel.classList.toggle('show');
+      if (panel.classList.contains('show')) {
+        renderTaskManageList();
+      }
+    }
+
+    function renderTaskManageList() {
+      const tasks = getTasks();
+      const container = document.getElementById('taskManageList');
+      container.innerHTML = tasks.map(task => `
+        <div class="task-manage-item">
+          <span class="task-name">${task.icon} ${task.title}</span>
+          <button class="delete-btn" onclick="deleteTask('${task.id}')">删除</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteTask(taskId) {
+      if (!confirm('确定删除这个打卡项吗？')) return;
+      let tasks = getTasks();
+      tasks = tasks.filter(t => t.id !== taskId);
+      saveTasks(tasks);
+      renderChecklist();
+      updateStats();
+      renderCalendar();
+      renderTaskManageList();
+    }
+
+    // ===== 启动 =====
+    init();
+  </script>
+</body>
+</html>
