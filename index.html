@@ -444,6 +444,218 @@
       font-size: 12px;
       color: var(--text-light);
     }
+
+    /* 日历日期可点击 */
+    .calendar-grid .day.clickable {
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .calendar-grid .day.clickable:hover {
+      transform: scale(1.2);
+    }
+
+    /* 弹窗遮罩 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .modal {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .modal-header h3 {
+      font-size: 17px;
+      color: var(--primary);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+    .modal-close:hover { background: var(--bg); }
+    .modal-summary {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-task {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .modal-task:last-child { border-bottom: none; }
+    .modal-task .status-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .modal-task .status-icon.done {
+      background: var(--success);
+      color: white;
+    }
+    .modal-task .status-icon.undone {
+      background: var(--border);
+      color: var(--text-light);
+    }
+    .modal-task .task-info {
+      flex: 1;
+    }
+    .modal-task .task-info .task-title {
+      font-weight: 500;
+    }
+    .modal-task .task-info .task-title.line-through {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+    .modal-task .task-time {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* 习惯分析 */
+    .analysis-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    .analysis-section h3 {
+      font-size: 16px;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .analysis-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .analysis-tabs button {
+      flex: 1;
+      padding: 8px 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: all 0.2s;
+    }
+    .analysis-tabs button.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .habit-rank-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .habit-rank-item:last-child { border-bottom: none; }
+    .habit-rank-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 10px;
+      flex-shrink: 0;
+      background: var(--border);
+      color: var(--text-light);
+    }
+    .habit-rank-item:nth-child(1) .habit-rank-num { background: #FFD700; color: white; }
+    .habit-rank-item:nth-child(2) .habit-rank-num { background: #C0C0C0; color: white; }
+    .habit-rank-item:nth-child(3) .habit-rank-num { background: #CD7F32; color: white; }
+    .habit-rank-info {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .habit-rank-info .habit-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .habit-rank-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 6px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .habit-rank-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+    .habit-rank-pct {
+      font-size: 14px;
+      font-weight: 700;
+      width: 45px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .analysis-tips {
+      margin-top: 16px;
+      padding: 14px;
+      background: var(--bg);
+      border-radius: 12px;
+    }
+    .analysis-tips h4 {
+      font-size: 14px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .analysis-tips p {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    .analysis-tips p:last-child { margin-bottom: 0; }
   </style>
 </head>
 <body>
@@ -510,7 +722,29 @@
       <div class="calendar-grid" id="calendarGrid"></div>
     </div>
 
+    <div class="analysis-section">
+      <h3>📊 习惯分析</h3>
+      <div class="analysis-tabs">
+        <button class="active" onclick="switchAnalysis(7, this)">近 7 天</button>
+        <button onclick="switchAnalysis(30, this)">近 30 天</button>
+        <button onclick="switchAnalysis(0, this)">全部</button>
+      </div>
+      <div id="analysisContent"></div>
+    </div>
+
     <div class="footer">数据保存在本地浏览器中</div>
+  </div>
+
+  <!-- 日期详情弹窗 -->
+  <div class="modal-overlay" id="dayModal" onclick="closeDayModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle"></h3>
+        <button class="modal-close" onclick="closeDayModal()">✕</button>
+      </div>
+      <div class="modal-summary" id="modalSummary"></div>
+      <div id="modalTaskList"></div>
+    </div>
   </div>
 
   <script>
@@ -740,7 +974,10 @@
         if (total > 0 && doneCount === total) cls += ' checked';
         else if (doneCount > 0) cls += ' partial';
 
-        html += `<div class="${cls}">${d}</div>`;
+        const hasData = doneCount > 0;
+        if (hasData) cls += ' clickable';
+        const clickAttr = hasData ? `onclick="showDayDetail('${ds}')"` : '';
+        html += `<div class="${cls}" ${clickAttr}>${d}</div>`;
       }
 
       document.getElementById('calendarGrid').innerHTML = html;
@@ -804,8 +1041,171 @@
       renderTaskManageList();
     }
 
+    // ===== 日期详情弹窗 =====
+    function showDayDetail(dateStr) {
+      const data = getData();
+      const tasks = getTasks();
+      const dayData = data[dateStr] || {};
+
+      const parts = dateStr.split('-');
+      const dateObj = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      document.getElementById('modalTitle').textContent =
+        `${parts[0]}年${+parts[1]}月${+parts[2]}日 星期${weekdays[dateObj.getDay()]}`;
+
+      const doneCount = tasks.filter(t => dayData[t.id]).length;
+      document.getElementById('modalSummary').textContent =
+        `完成 ${doneCount} / ${tasks.length} 项`;
+
+      document.getElementById('modalTaskList').innerHTML = tasks.map(task => {
+        const done = dayData[task.id] || false;
+        return `
+          <div class="modal-task">
+            <div class="status-icon ${done ? 'done' : 'undone'}">${done ? '✓' : '−'}</div>
+            <div class="task-info">
+              ${task.time ? `<div class="task-time">${task.time}</div>` : ''}
+              <div class="task-title ${done ? 'line-through' : ''}">${task.icon} ${task.title}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('dayModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDayModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('dayModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // ===== 习惯分析 =====
+    let currentAnalysisDays = 7;
+
+    function switchAnalysis(days, btn) {
+      currentAnalysisDays = days;
+      document.querySelectorAll('.analysis-tabs button').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderAnalysis();
+    }
+
+    function getDateRange(days) {
+      const data = getData();
+      const allDates = Object.keys(data).sort();
+      if (days === 0) return allDates;
+
+      const now = new Date();
+      const dates = [];
+      for (let i = 0; i < days; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        dates.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+      }
+      return dates;
+    }
+
+    function renderAnalysis() {
+      const data = getData();
+      const tasks = getTasks();
+      const dates = getDateRange(currentAnalysisDays);
+      const datesWithData = dates.filter(d => data[d]);
+      const totalDays = datesWithData.length;
+
+      if (totalDays === 0) {
+        document.getElementById('analysisContent').innerHTML =
+          '<p style="text-align:center;color:var(--text-light);padding:20px 0;">暂无打卡数据，开始打卡后这里会显示分析</p>';
+        return;
+      }
+
+      // 计算每个任务的完成率
+      const taskStats = tasks.map(task => {
+        let doneCount = 0;
+        datesWithData.forEach(d => {
+          if (data[d] && data[d][task.id]) doneCount++;
+        });
+        const rate = Math.round(doneCount / totalDays * 100);
+        return { ...task, doneCount, rate };
+      });
+
+      // 按完成率排序
+      const sorted = [...taskStats].sort((a, b) => b.rate - a.rate);
+
+      // 颜色映射
+      function getColor(rate) {
+        if (rate >= 80) return '#4CAF50';
+        if (rate >= 60) return '#8BC34A';
+        if (rate >= 40) return '#FF9800';
+        if (rate >= 20) return '#FF5722';
+        return '#F44336';
+      }
+
+      let html = '<div>';
+      sorted.forEach((task, i) => {
+        const color = getColor(task.rate);
+        html += `
+          <div class="habit-rank-item">
+            <div class="habit-rank-num">${i + 1}</div>
+            <div class="habit-rank-info">
+              <div class="habit-name">${task.icon} ${task.title}</div>
+              <div class="habit-rank-bar">
+                <div class="habit-rank-bar-fill" style="width:${task.rate}%;background:${color}"></div>
+              </div>
+            </div>
+            <div class="habit-rank-pct" style="color:${color}">${task.rate}%</div>
+          </div>
+        `;
+      });
+      html += '</div>';
+
+      // 生成建议
+      const best = sorted.filter(t => t.rate >= 80);
+      const weak = sorted.filter(t => t.rate < 50);
+      const periodLabel = currentAnalysisDays === 0 ? '全部时间' : `近 ${currentAnalysisDays} 天`;
+
+      html += '<div class="analysis-tips">';
+      html += `<h4>💡 ${periodLabel}分析建议（共 ${totalDays} 天数据）</h4>`;
+
+      if (best.length > 0) {
+        html += `<p>🏆 <strong>坚持最好的习惯：</strong>${best.slice(0, 3).map(t => t.icon + t.title).join('、')}，完成率都在 80% 以上，继续保持！</p>`;
+      }
+
+      if (weak.length > 0) {
+        html += `<p>⚠️ <strong>需要加油的习惯：</strong>${weak.slice(-3).map(t => t.icon + t.title).join('、')}，完成率偏低。</p>`;
+
+        // 分析是早间还是晚间任务偏弱
+        const weakIds = weak.map(t => t.id);
+        const morningIds = ['t01','t02','t03','t04','t05'];
+        const eveningIds = ['t14','t15','t16','t17'];
+        const weakMorning = weakIds.filter(id => morningIds.includes(id)).length;
+        const weakEvening = weakIds.filter(id => eveningIds.includes(id)).length;
+
+        if (weakMorning >= 2) {
+          html += '<p>🌅 早间习惯完成率偏低，建议把闹钟提前 5 分钟，并把手机放远一点，起床后先完成最短的任务来建立惯性。</p>';
+        }
+        if (weakEvening >= 2) {
+          html += '<p>🌙 晚间习惯容易被忽略，建议设置一个 20:00 的手机提醒，帮助自己切换到晚间仪式模式。</p>';
+        }
+        if (weakMorning < 2 && weakEvening < 2) {
+          html += '<p>💪 建议从最容易坚持的习惯开始，用小胜利带动大改变。可以尝试把薄弱项和强项绑定在一起做。</p>';
+        }
+      }
+
+      if (best.length === sorted.length) {
+        html += '<p>🎉 所有习惯都保持得很棒！你已经建立了非常好的生活节奏，继续保持这份自律！</p>';
+      }
+
+      const avgRate = Math.round(sorted.reduce((s, t) => s + t.rate, 0) / sorted.length);
+      html += `<p>📈 整体完成率 <strong>${avgRate}%</strong>，${avgRate >= 70 ? '表现优秀！' : avgRate >= 50 ? '还不错，继续加油！' : '慢慢来，每天进步一点点！'}</p>`;
+
+      html += '</div>';
+
+      document.getElementById('analysisContent').innerHTML = html;
+    }
+
     // ===== 启动 =====
     init();
+    renderAnalysis();
   </script>
 </body>
 </html>

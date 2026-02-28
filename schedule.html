@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日作息安排表</title>
+  <style>
+    @media print {
+      body { margin: 0; padding: 20px; }
+      .no-print { display: none !important; }
+      table { page-break-inside: avoid; }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #f5f3ff;
+      padding: 40px 20px;
+      color: #2D2B55;
+    }
+
+    .page {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 50px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(108, 99, 255, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #6C63FF;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: #6C63FF;
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #8E8BA3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      background: #6C63FF;
+      color: white;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    thead th:first-child { border-radius: 8px 0 0 0; }
+    thead th:last-child { border-radius: 0 8px 0 0; }
+
+    tbody tr { border-bottom: 1px solid #E8E6F0; }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody tr:nth-child(even) { background: #FAFAFF; }
+
+    tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .col-icon {
+      width: 36px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .col-time {
+      width: 130px;
+      font-weight: 600;
+      color: #6C63FF;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .col-task {
+      font-weight: 500;
+    }
+
+    .col-note {
+      color: #8E8BA3;
+      font-size: 13px;
+    }
+
+    .col-check {
+      width: 40px;
+      text-align: center;
+    }
+
+    .checkbox-print {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #C8C6D6;
+      border-radius: 4px;
+    }
+
+    .section-row td {
+      background: #F0EEFF;
+      font-weight: 700;
+      color: #6C63FF;
+      font-size: 13px;
+      letter-spacing: 2px;
+      padding: 8px 16px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed #E8E6F0;
+      font-size: 13px;
+      color: #8E8BA3;
+    }
+
+    .footer .motto {
+      font-size: 15px;
+      color: #6C63FF;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .print-btn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 14px 40px;
+      background: #6C63FF;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .print-btn:hover { background: #8B85FF; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>✨ 我的美好一天 ✨</h1>
+      <p>每日作息安排表 · 自律即自由</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="col-icon"></th>
+          <th class="col-time">时间</th>
+          <th class="col-task">事项</th>
+          <th class="col-note">备注</th>
+          <th class="col-check">✓</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-row"><td colspan="5">🌅 早 间 · 唤 醒 身 体</td></tr>
+        <tr>
+          <td class="col-icon">⏰</td>
+          <td class="col-time">6:20</td>
+          <td class="col-task">起床</td>
+          <td class="col-note">新的一天开始啦</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">💪</td>
+          <td class="col-time">6:20 – 6:25</td>
+          <td class="col-task">鼓肚子 5 分钟</td>
+          <td class="col-note">唤醒身体</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🩸</td>
+          <td class="col-time">6:25 – 6:30</td>
+          <td class="col-task">气血操 5 分钟</td>
+          <td class="col-note">促进气血循环</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🧘</td>
+          <td class="col-time">6:30 – 7:30</td>
+          <td class="col-task">瑜伽 60 分钟</td>
+          <td class="col-note">舒展身心，保持健康</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🥋</td>
+          <td class="col-time">7:30 – 7:45</td>
+          <td class="col-task">八段锦 15 分钟</td>
+          <td class="col-note">传统养生功法</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+
+        <tr class="section-row"><td colspan="5">💄 上 午 · 出 门 准 备</td></tr>
+        <tr>
+          <td class="col-icon">💄</td>
+          <td class="col-time">7:45 – 8:20</td>
+          <td class="col-task">洗漱 · 化妆 · 穿搭</td>
+          <td class="col-note">同时听播客</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🚗</td>
+          <td class="col-time">8:20 – 9:00</td>
+          <td class="col-task">上班 + 公司早餐</td>
+          <td class="col-note">上班路上听帆书</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+
+        <tr class="section-row"><td colspan="5">💻 工 作 · 专 注 高 效</td></tr>
+        <tr>
+          <td class="col-icon">📋</td>
+          <td class="col-time">9:00 – 9:50</td>
+          <td class="col-task">列出今日重点工作</td>
+          <td class="col-note">查看邮件，理清思路</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🔥</td>
+          <td class="col-time">9:50</td>
+          <td class="col-task">切换工作状态</td>
+          <td class="col-note">进入专注模式</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">💻</td>
+          <td class="col-time">10:00 – 12:00</td>
+          <td class="col-task">专注高效工作（上午）</td>
+          <td class="col-note">心无旁骛，全力以赴</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+
+        <tr class="section-row"><td colspan="5">🌿 午 间 · 自 由 充 电</td></tr>
+        <tr>
+          <td class="col-icon">🌿</td>
+          <td class="col-time">12:00 – 14:00</td>
+          <td class="col-task">午间自由安排</td>
+          <td class="col-note">走路听书 / 美容院 / 午休冥想</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+
+        <tr class="section-row"><td colspan="5">💻 下 午 · 高 效 产 出</td></tr>
+        <tr>
+          <td class="col-icon">💻</td>
+          <td class="col-time">14:00 – 18:00</td>
+          <td class="col-task">专注高效工作（下午）</td>
+          <td class="col-note">保持节奏，高效产出</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+
+        <tr class="section-row"><td colspan="5">🌙 晚 间 · 放 松 成 长</td></tr>
+        <tr>
+          <td class="col-icon">🍽️</td>
+          <td class="col-time">18:00 – 20:00</td>
+          <td class="col-task">下班 · 晚餐 · 饭后放松</td>
+          <td class="col-note">饭后站立放松</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">📚</td>
+          <td class="col-time">20:00 – 21:00</td>
+          <td class="col-task">学习一小时</td>
+          <td class="col-note">理财 / 化妆 / 穿搭等</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🦶</td>
+          <td class="col-time">21:00 – 21:30</td>
+          <td class="col-task">泡脚</td>
+          <td class="col-note">敷面膜 / 听古典音乐 / 看微博</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">📝</td>
+          <td class="col-time">21:30 – 22:00</td>
+          <td class="col-task">总结日记 · 准备明日穿搭</td>
+          <td class="col-note">回顾今天，规划明天</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+        <tr>
+          <td class="col-icon">🌙</td>
+          <td class="col-time">22:00 – 23:00</td>
+          <td class="col-task">睡前仪式</td>
+          <td class="col-note">五动作 · 冥想 · 阅读</td>
+          <td class="col-check"><span class="checkbox-print"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      <div class="motto">✨ 自律的每一天，都是在靠近更好的自己 ✨</div>
+      <div>日期：__________ 完成率：____ / 17</div>
+    </div>
+  </div>
+
+  <button class="print-btn no-print" onclick="window.print()">🖨️ 打印此表</button>
+</body>
+</html>
