@@ -1190,9 +1190,20 @@
     function getDateRange(days) {
       const data = getData();
       const allDates = Object.keys(data).sort();
-      if (days === 0) return allDates;
-
       const now = new Date();
+
+      if (days === 0) {
+        // 从最早打卡日到今天的所有日期
+        if (allDates.length === 0) return [];
+        const startParts = allDates[0].split('-');
+        const start = new Date(+startParts[0], +startParts[1] - 1, +startParts[2]);
+        const dates = [];
+        for (let d = new Date(start); d <= now; d.setDate(d.getDate() + 1)) {
+          dates.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+        }
+        return dates;
+      }
+
       const dates = [];
       for (let i = 0; i < days; i++) {
         const d = new Date(now);
@@ -1206,19 +1217,19 @@
       const data = getData();
       const tasks = getTasks();
       const dates = getDateRange(currentAnalysisDays);
-      const datesWithData = dates.filter(d => data[d]);
-      const totalDays = datesWithData.length;
+      const totalDays = dates.length;
+      const datesWithData = dates.filter(d => data[d] && Object.values(data[d]).some(v => v === true));
 
-      if (totalDays === 0) {
+      if (datesWithData.length === 0) {
         document.getElementById('analysisContent').innerHTML =
           '<p style="text-align:center;color:var(--text-light);padding:20px 0;">暂无打卡数据，开始打卡后这里会显示分析</p>';
         return;
       }
 
-      // 计算每个任务的完成率
+      // 计算每个任务的完成率（分母为区间总天数）
       const taskStats = tasks.map(task => {
         let doneCount = 0;
-        datesWithData.forEach(d => {
+        dates.forEach(d => {
           if (data[d] && data[d][task.id]) doneCount++;
         });
         const rate = Math.round(doneCount / totalDays * 100);
@@ -1261,7 +1272,7 @@
       const periodLabel = currentAnalysisDays === 0 ? '全部时间' : `近 ${currentAnalysisDays} 天`;
 
       html += '<div class="analysis-tips">';
-      html += `<h4>💡 ${periodLabel}分析建议（共 ${totalDays} 天数据）</h4>`;
+      html += `<h4>💡 ${periodLabel}分析建议（${datesWithData.length} / ${totalDays} 天有打卡）</h4>`;
 
       if (best.length > 0) {
         html += `<p>🏆 <strong>坚持最好的习惯：</strong>${best.slice(0, 3).map(t => t.icon + t.title).join('、')}，完成率都在 80% 以上，继续保持！</p>`;
