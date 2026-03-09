@@ -967,20 +967,21 @@
         }
       }
 
-      // 本月完成率
+      // 本月完成率 = 有打卡记录的天数 / 整月天数
       const now = new Date();
       const year = now.getFullYear();
       const month = now.getMonth();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const daysPassed = now.getDate();
-      let completedThisMonth = 0;
+      let checkedDaysThisMonth = 0;
 
       for (let i = 1; i <= daysPassed; i++) {
         const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        if (isDayComplete(ds)) completedThisMonth++;
+        const dayData = data[ds];
+        if (dayData && Object.values(dayData).some(v => v === true)) checkedDaysThisMonth++;
       }
 
-      const rate = daysPassed > 0 ? Math.round(completedThisMonth / daysPassed * 100) : 0;
+      const rate = daysInMonth > 0 ? Math.round(checkedDaysThisMonth / daysInMonth * 100) : 0;
 
       document.getElementById('streakDays').textContent = streak;
       document.getElementById('totalDays').textContent = totalDays;
