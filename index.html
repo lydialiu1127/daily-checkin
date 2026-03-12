@@ -807,14 +807,14 @@
   <script>
     // ===== 默认任务列表 =====
     const DEFAULT_TASKS = [
-      { id: 't01', icon: '💪', title: '龙抬头 10 次', desc: '唤醒身体' },
-      { id: 't02', icon: '🩸', title: '气血操 5 分钟', desc: '促进气血循环' },
-      { id: 't03', icon: '🥋', title: '八段锦 15 分钟', desc: '传统养生功法' },
-      { id: 't04', icon: '🧘', title: '瑜伽 60 分钟', desc: '舒展身心，保持健康' },
-      { id: 't05', icon: '🦶', title: '泡脚', desc: '敷面膜/听古典音乐/看微博' },
-      { id: 't06', icon: '📚', title: '学习一小时', desc: '完成阶段性学习目标' },
-      { id: 't07', icon: '📝', title: '总结日记·准备明日穿搭', desc: '回顾今天，规划明天' },
-      { id: 't08', icon: '🌙', title: '睡前仪式', desc: '五动作·冥想·阅读' },
+      { id: 't01', icon: '🌅', title: '唤醒仪式', desc: '深呼吸 4-4-6' },
+      { id: 't02', icon: '💧', title: '冷水醒神', desc: '今天，我是自己的活水' },
+      { id: 't03', icon: '🍵', title: '喝一杯温水（加苹果醋）', desc: '感受水流进身体' },
+      { id: 't04', icon: '🧘', title: '早课瑜伽冥想', desc: '吸气水流汇聚，呼气水波扩散' },
+      { id: 't05', icon: '🪞', title: '对自己说"我是流动的，我是清澈的"', desc: '镜前肯定，唤醒内在力量' },
+      { id: 't06', icon: '📖', title: '读经', desc: '静心诵读，滋养灵魂' },
+      { id: 't07', icon: '✍️', title: '抄经', desc: '一笔一划，沉淀内心' },
+      { id: 't08', icon: '📝', title: '晨间书写', desc: '用金雕琢自己的心，让智慧的水流进' },
     ];
 
     const STORAGE_KEY = 'daily_checkin_data';
@@ -850,7 +850,7 @@
     function getTasks() {
       try {
         // 如果版本不匹配，重置为新的默认任务
-        const currentVersion = 'v3';
+        const currentVersion = 'v4';
         if (localStorage.getItem('daily_checkin_version') !== currentVersion) {
           localStorage.setItem('daily_checkin_version', currentVersion);
           localStorage.removeItem(TASKS_KEY);
