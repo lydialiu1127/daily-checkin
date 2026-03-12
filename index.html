@@ -807,7 +807,8 @@
   <script>
     // ===== 默认任务列表 =====
     const DEFAULT_TASKS = [
-      { id: 't01', icon: '🌅', title: '唤醒仪式', desc: '深呼吸 4-4-6' },
+      // 🌄 6:00 晨间仪式
+      { id: 't01', icon: '🌅', title: '6:00 唤醒仪式', desc: '深呼吸 4-4-6' },
       { id: 't02', icon: '💧', title: '冷水醒神', desc: '今天，我是自己的活水' },
       { id: 't03', icon: '🍵', title: '喝一杯温水（加苹果醋）', desc: '感受水流进身体' },
       { id: 't04', icon: '🧘', title: '早课瑜伽冥想', desc: '吸气水流汇聚，呼气水波扩散' },
@@ -815,6 +816,27 @@
       { id: 't06', icon: '📖', title: '读经', desc: '静心诵读，滋养灵魂' },
       { id: 't07', icon: '✍️', title: '抄经', desc: '一笔一划，沉淀内心' },
       { id: 't08', icon: '📝', title: '晨间书写', desc: '用金雕琢自己的心，让智慧的水流进' },
+      // 🍳 7:30 滋养与准备
+      { id: 't09', icon: '🍳', title: '7:30 滋养早餐与准备', desc: '我值得被好好喂养，我值得被精心打扮' },
+      { id: 't10', icon: '💦', title: '水能量补给', desc: '喝 2000ml 水' },
+      // ☀️ 午间
+      { id: 't11', icon: '🥗', title: '12:00 用心午餐', desc: '我在用食物滋养我的身体' },
+      { id: 't12', icon: '🌳', title: '13:00-13:30 轻松漫步看看树', desc: '亲近自然，放松身心' },
+      { id: 't13', icon: '😴', title: '13:30-14:00 禅睡', desc: '短暂休憩，恢复能量' },
+      // ⚡ 下午深度时段
+      { id: 't14', icon: '⚡', title: '14:00-17:00 用申金深度学习工作', desc: '用学习创造填充这段时间，用最强的能量重塑自己' },
+      { id: 't15', icon: '🧹', title: '17:00 申金收尾整理桌面', desc: '今天我又进步了一点点，我完成了今天该做的' },
+      // 🌇 傍晚过渡
+      { id: 't16', icon: '🚶', title: '17:30-18:30 下班路上', desc: '我从工作能量平稳过渡回家，家是滋养我的地方' },
+      { id: 't17', icon: '🍽️', title: '18:30-19:30 晚餐与世界连接', desc: '温和地与他人与世界连接' },
+      // 🌙 晚间放松
+      { id: 't18', icon: '🎬', title: '19:30-21:00 放松', desc: '看剧/手工/发呆' },
+      { id: 't19', icon: '🛁', title: '21:00 水能量仪式', desc: '泡脚/泡澡/敷面膜' },
+      { id: 't20', icon: '🙏', title: '21:00-21:30 感恩日记', desc: '今天，我过的很好。明天，我会更好。' },
+      { id: 't21', icon: '🌙', title: '21:30-22:00 睡前准备', desc: '慈心冥想' },
+      // 🌈 周末专属
+      { id: 't22', icon: '🎨', title: '周末：带自己去做一件喜欢的事', desc: '奖赏自己，享受生活' },
+      { id: 't23', icon: '✨', title: '周末：大扫除与断舍离', desc: '清理空间，清理内心' },
     ];
 
     const STORAGE_KEY = 'daily_checkin_data';
@@ -850,7 +872,7 @@
     function getTasks() {
       try {
         // 如果版本不匹配，重置为新的默认任务
-        const currentVersion = 'v4';
+        const currentVersion = 'v5';
         if (localStorage.getItem('daily_checkin_version') !== currentVersion) {
           localStorage.setItem('daily_checkin_version', currentVersion);
           localStorage.removeItem(TASKS_KEY);
@@ -1295,8 +1317,8 @@
 
         // 分析是早间还是晚间任务偏弱
         const weakIds = weak.map(t => t.id);
-        const morningIds = ['t01','t02','t03','t04'];
-        const eveningIds = ['t05','t06','t07','t08'];
+        const morningIds = ['t01','t02','t03','t04','t05','t06','t07','t08','t09','t10'];
+        const eveningIds = ['t18','t19','t20','t21'];
         const weakMorning = weakIds.filter(id => morningIds.includes(id)).length;
         const weakEvening = weakIds.filter(id => eveningIds.includes(id)).length;
 
