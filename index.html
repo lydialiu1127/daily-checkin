@@ -850,8 +850,9 @@
     function getTasks() {
       try {
         // 如果版本不匹配，重置为新的默认任务
-        if (localStorage.getItem(TASKS_VERSION) !== 'v2') {
-          localStorage.setItem(TASKS_VERSION, 'v2');
+        const currentVersion = 'v3';
+        if (localStorage.getItem('daily_checkin_version') !== currentVersion) {
+          localStorage.setItem('daily_checkin_version', currentVersion);
           localStorage.removeItem(TASKS_KEY);
           return DEFAULT_TASKS;
         }
@@ -1076,17 +1077,25 @@
       container.innerHTML = tasks.map(task => {
         if (editingTaskId === task.id) {
           return `
-            <div class="task-edit-row">
-              <input type="text" id="editInput_${task.id}" value="${task.title}" maxlength="20"
-                onkeydown="if(event.key==='Enter')saveEditTask('${task.id}');if(event.key==='Escape')cancelEdit();">
-              <button class="save-btn" onclick="saveEditTask('${task.id}')">保存</button>
-              <button class="cancel-btn" onclick="cancelEdit()">取消</button>
+            <div class="task-edit-row" style="flex-direction:column;gap:8px;">
+              <input type="text" id="editInput_${task.id}" value="${task.title}" maxlength="20" placeholder="打卡项名称"
+                onkeydown="if(event.key==='Escape')cancelEdit();">
+              <input type="text" id="editDesc_${task.id}" value="${task.desc || ''}" maxlength="30" placeholder="描述（小字部分）"
+                onkeydown="if(event.key==='Enter')saveEditTask('${task.id}');if(event.key==='Escape')cancelEdit();"
+                style="border-color:var(--text-light);">
+              <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button class="cancel-btn" onclick="cancelEdit()">取消</button>
+                <button class="save-btn" onclick="saveEditTask('${task.id}')">保存</button>
+              </div>
             </div>
           `;
         }
         return `
           <div class="task-manage-item">
-            <span class="task-name">${task.icon} ${task.title}</span>
+            <div class="task-name">
+              ${task.icon} ${task.title}
+              <div style="font-size:12px;color:var(--text-light);margin-top:2px;">${task.desc || ''}</div>
+            </div>
             <div class="task-actions">
               <button class="edit-btn" onclick="startEditTask('${task.id}')">编辑</button>
               <button class="delete-btn" onclick="deleteTask('${task.id}')">删除</button>
@@ -1108,6 +1117,7 @@
 
     function saveEditTask(taskId) {
       const input = document.getElementById('editInput_' + taskId);
+      const descInput = document.getElementById('editDesc_' + taskId);
       const newTitle = input.value.trim();
       if (!newTitle) { alert('名称不能为空'); return; }
 
@@ -1115,6 +1125,7 @@
       const task = tasks.find(t => t.id === taskId);
       if (task) {
         task.title = newTitle;
+        task.desc = descInput ? descInput.value.trim() : task.desc;
         saveTasks(tasks);
       }
       editingTaskId = null;
