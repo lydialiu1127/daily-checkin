@@ -513,6 +513,24 @@
       transform: scale(1.2);
     }
 
+    .calendar-grid .day.selected {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+
+    .back-today-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
     /* 弹窗遮罩 */
     .modal-overlay {
       display: none;
@@ -779,6 +797,9 @@
         <button onclick="changeMonth(1)">›</button>
       </div>
       <div class="calendar-grid" id="calendarGrid"></div>
+      <div id="backTodayWrap" style="text-align:center;display:none;">
+        <button class="back-today-btn" onclick="backToToday()">↩ 回到今天</button>
+      </div>
     </div>
 
     <div class="analysis-section">
@@ -824,11 +845,16 @@
     const TASKS_KEY = 'liuying_checkin_tasks';
 
     let currentCalendarDate = new Date();
+    let selectedDate = null; // 当前选中的日期（补打卡用）
 
     // ===== 工具函数 =====
     function getToday() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function getActiveDate() {
+      return selectedDate || getToday();
     }
 
     function formatDate(date) {
@@ -862,17 +888,34 @@
 
     // ===== 初始化 =====
     function init() {
-      document.getElementById('todayDate').textContent = formatDate(new Date());
+      updateDateDisplay();
       renderChecklist();
       updateStats();
       renderCalendar();
+    }
+
+    function updateDateDisplay() {
+      const active = getActiveDate();
+      const parts = active.split('-');
+      const dateObj = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+      const today = getToday();
+      const backBtn = document.getElementById('backTodayWrap');
+      if (active === today) {
+        document.getElementById('todayDate').textContent = formatDate(dateObj);
+        if (backBtn) backBtn.style.display = 'none';
+      } else {
+        const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+        document.getElementById('todayDate').textContent =
+          `📝 补打卡：${+parts[1]}月${+parts[2]}日 星期${weekdays[dateObj.getDay()]}`;
+        if (backBtn) backBtn.style.display = 'block';
+      }
     }
 
     // ===== 渲染打卡列表 =====
     function renderChecklist() {
       const tasks = getTasks();
       const data = getData();
-      const today = getToday();
+      const today = getActiveDate();
       const todayData = data[today] || {};
 
       const container = document.getElementById('checklist');
@@ -910,7 +953,7 @@
     // ===== 切换打卡 =====
     function toggleTask(taskId) {
       const data = getData();
-      const today = getToday();
+      const today = getActiveDate();
       if (!data[today]) data[today] = {};
       data[today][taskId] = !data[today][taskId];
       saveData(data);
@@ -1016,12 +1059,14 @@
 
         let cls = 'day';
         if (ds === todayStr) cls += ' today';
+        if (ds === getActiveDate() && ds !== todayStr) cls += ' selected';
         if (total > 0 && doneCount === total) cls += ' checked';
         else if (doneCount > 0) cls += ' partial';
 
-        const hasData = doneCount > 0;
-        if (hasData) cls += ' clickable';
-        const clickAttr = hasData ? `onclick="showDayDetail('${ds}')"` : '';
+        // 今天和过去的日期都可以点击
+        const isPastOrToday = ds <= todayStr;
+        if (isPastOrToday) cls += ' clickable';
+        const clickAttr = isPastOrToday ? `onclick="selectDate('${ds}')"` : '';
         html += `<div class="${cls}" ${clickAttr}>${d}</div>`;
       }
 
@@ -1030,6 +1075,26 @@
 
     function changeMonth(delta) {
       currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    // ===== 选择日期（补打卡） =====
+    function selectDate(dateStr) {
+      const today = getToday();
+      if (dateStr === today) {
+        selectedDate = null; // 回到今天
+      } else {
+        selectedDate = dateStr;
+      }
+      updateDateDisplay();
+      renderChecklist();
+      renderCalendar();
+    }
+
+    function backToToday() {
+      selectedDate = null;
+      updateDateDisplay();
+      renderChecklist();
       renderCalendar();
     }
 
